@@ -35,4 +35,4 @@ while True:
     usb_midi.control_change(cc, cc_val)
     led.value(0) # Turn led off
     exp_value_previous = exp_value_current
-    print(cc_val)
+    print("Writing CC value " + cc_val)
