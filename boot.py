@@ -1,4 +1,4 @@
-import machine
+from machine import ADC, Pin
 import midi
 
 # Devices
