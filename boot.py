@@ -1,4 +1,3 @@
-from typing import type_check_only
 import machine
 import midi
 
