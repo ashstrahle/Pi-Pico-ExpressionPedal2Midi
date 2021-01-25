@@ -1,40 +1,37 @@
 import sys
-from machine import ADC, Pin
-import pyb
-import midi
+import usb_midi
+import adafruit_midi
+from adafruit_midi.control_change import ControlChange
+import digitalio
+import analogio
+from board import *
 
 # Devices
-exp = machine.ADC(31) # Expression pedal device on pin 31
-serial = pyb.USB_VCP()
-led = Pin(25, Pin.OUT)
+exp = analogio.AnalogIn(A0) # Expression pedal
+led = digitalio.DigitalInOut(LED)
 
 # Expression pedal settings
 exp_min = 0 # Expression pedal minimum value
 exp_max = 65535 #Expression pedal maximum value
 
 # Midi settings
-midi_channel = 1 # Target midi channel to write to
+midi_channel = 0 # Target midi channel to write to
 cc = 68 # Target Control Change number - this is for Behringer X32 Matrix 5
 cc_min = 0 # Minimum desired CC output
 cc_max = 100 # Maximum desired CC output (only want fader to go to unity gain - hence not 127)
 
 # This function translates the expression pedal value to the equivalent CC value
 def translate(exp_val):
-  return (((exp_val - exp_min) * (cc_max - cc_min)) / (exp_max - exp_min)) + cc_min
+  return int((((exp_val - exp_min) * (cc_max - cc_min)) / (exp_max - exp_min)) + cc_min)
 
-# Test the translate function:
-# for i in range(65535):
-#   print (translate(i))
+midi = adafruit_midi.MIDI(midi_out=usb_midi.ports[1], out_channel=midi_channel)
+cc_val_last = 0
 
-usb_midi = midi.Controller(serial, channel=midi_channel)
-exp_value_previous = 0
-
+led.switch_to_output(value=True)
 while True:
-  exp_value_current = exp.read_u16()
-  if exp_value_current != exp_value_previous:
-    led.value(1) # Turn led on
-    cc_val = translate(exp_value_current)
-    usb_midi.control_change(cc, cc_val)
-    led.value(0) # Turn led off
-    exp_value_previous = exp_value_current
-    print("Writing CC value " + cc_val)
+  cc_val = translate(exp.value)
+  if cc_val != cc_val_last:
+    led.switch_to_output(value=False) # Flicker led
+    midi.send(ControlChange(cc, cc_val)) # Write midi
+    led.switch_to_output(value=True)
+    cc_val_last = cc_val
