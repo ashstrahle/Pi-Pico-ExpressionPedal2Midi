@@ -1,3 +1,4 @@
+import sys
 from machine import ADC, Pin
 import pyb
 import midi
