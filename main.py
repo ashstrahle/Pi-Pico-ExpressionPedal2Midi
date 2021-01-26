@@ -1,14 +1,17 @@
-import sys
 import usb_midi
 import adafruit_midi
 from adafruit_midi.control_change import ControlChange
 import digitalio
 import analogio
-from board import *
+# import busio
+import board
+import time
 
 # Devices
-exp = analogio.AnalogIn(A0) # Expression pedal
-led = digitalio.DigitalInOut(LED)
+exp = analogio.AnalogIn(board.A0) # Expression pedal
+led = digitalio.DigitalInOut(board.LED)
+
+# led = Pin(25, Pin.OUT)
 
 # Expression pedal settings
 exp_min = 0 # Expression pedal minimum value
@@ -25,13 +28,23 @@ def translate(exp_val):
   return int((((exp_val - exp_min) * (cc_max - cc_min)) / (exp_max - exp_min)) + cc_min)
 
 midi = adafruit_midi.MIDI(midi_out=usb_midi.ports[1], out_channel=midi_channel)
+
+
+# uart = busio.UART(board.GP4, board.GP5, baudrate=31250)
+# midi = adafruit_midi.MIDI(midi_out=uart, out_channel=midi_channel)
+
 cc_val_last = 0
 
 led.switch_to_output(value=True)
 while True:
-  cc_val = translate(exp.value)
-  if cc_val != cc_val_last:
-    led.switch_to_output(value=False) # Flicker led
-    midi.send(ControlChange(cc, cc_val)) # Write midi
+  # cc_val = translate(exp.value)
+  # if cc_val != cc_val_last:
+  #   led.switch_to_output(value=False) # Flicker led
+  #   midi.send(ControlChange(cc, cc_val)) # Write midi
+  #   led.switch_to_output(value=True)
+  #   cc_val_last = cc_val
+  for i in range(100):
     led.switch_to_output(value=True)
-    cc_val_last = cc_val
+    midi.send(ControlChange(cc, i))
+    led.switch_to_output(value=False)
+    time.sleep(0.05)
