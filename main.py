@@ -12,7 +12,7 @@ cc = 68 # Target Control Change number - this is for Behringer X32 Matrix 5
 cc_min = 0 # Minimum desired CC output
 cc_max = 97 # Maximum desired CC output (only want fader to go to unity gain - hence not 127)
 
-exp_calibration_threshold = 40000 # This is the minimum amount of change required successful for calibration
+exp_pedal_calibration_percent = 80 # Required percentage of expression pedal movement for calibration 
 
 # Devices
 exp = machine.ADC(Pin(26)) # Expression pedal device on pin 31
@@ -20,9 +20,12 @@ uart = machine.UART(1, 31250) # UART Midi device on pin 6
 led = machine.Pin(25, Pin.OUT) # Pico onboard led
 
 # Initialise variables
-# Set these to reverse thresholds to enable self calibration
+# Set these to reverse thresholds to enable calibration
 exp_min = 65535 
 exp_max = 1
+
+exp_calibration_threshold = int(abs(exp_max - exp_min) * exp_pedal_calibration_percent/100)
+cc_ratio = 1/(cc_max - cc_min) # Calculate number of possible CC values
 
 # This function translates the expression pedal value to the equivalent CC value
 def translate(exp_val):
@@ -37,7 +40,7 @@ while True:
   exp_current = exp.read_u16()
 
   # Only process if the change ratio is greater than the possible number of CC values
-  if abs(exp_current - exp_previous)/exp_max > 1/(cc_max - cc_min): 
+  if abs(exp_current - exp_previous)/exp_max > cc_ratio: 
     if exp_current > exp_max:
       exp_max = exp_current
     elif exp_current < exp_min:
@@ -46,8 +49,8 @@ while True:
 
     # Only send midi when calibration threshold has been reached
     if exp_max - exp_min > exp_calibration_threshold: 
-      cc_val = translate(exp_current)
       led.value(1) # Turn led on
+      cc_val = translate(exp_current)
       uart.write(ustruct.pack("bbb",ControlChange + midi_channel - 1,cc,cc_val))
       led.value(0) # Turn led off
       print("Writing Midi Channel: {}, ControlChange: {}, Value {}. Exp Pedal: cur: {}, min: {}, max: {}".format(midi_channel, cc, cc_val, exp_current, exp_min, exp_max))
