@@ -66,6 +66,6 @@ while True:
     if exp_max - exp_min > exp_calibration_threshold: 
       led.value(1) # Turn led on
       cc_val = translate(exp_current)
-      uart.write(ustruct.pack("bbb",ControlChange + midi_channel - 1,cc,cc_val))
+      uart.write(ustruct.pack("bbb",ControlChange + midi_channel - 1, cc, cc_val))
       led.value(0) # Turn led off
       print("Writing Midi Channel: {}, ControlChange: {}, Value {}. Exp Pedal: cur: {}, min: {}, max: {}".format(midi_channel, cc, cc_val, exp_current, exp_min, exp_max))
