@@ -1,3 +1,18 @@
+################################################################################
+#
+# Pi-Pico-ExpressionPedal2Midi
+#
+# Connect an expression pedal to ADC0, and a midi out socket/cable to UART1.
+# Set desired midi channel, change control, and maximum and minimum values
+#
+# Upon run/power on, move expresson pedal from maximum to minimum to calibrate
+# your pedal. CC commands will immediately start sending once calibrated.
+#
+# Ashley Strahle
+# https://github.com/ashstrahle
+#
+################################################################################
+
 import sys
 from machine import ADC, Pin, UART
 import ustruct
