@@ -50,5 +50,3 @@ while True:
     led.value(0) # Turn led off
     cc_previous = cc_current
     print("Writing Midi Channel: {}, ControlChange: {}, Value {}. Exp Pedal: cur: {}, min: {}, max: {}".format(midi_channel, cc, cc_current, exp_current, exp_min, exp_max))
-  # else:
-  #   time.sleep(0.05)
