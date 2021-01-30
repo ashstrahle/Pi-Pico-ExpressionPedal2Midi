@@ -9,7 +9,7 @@ ControlChange = 0xb0
 # Midi settings
 midi_channel = 1 # Target midi channel to write to
 cc = 68 # Target Control Change number - this is for Behringer X32 Matrix 5
-cc_min = 0 # Minimum desired CC output
+cc_min = 20 # Minimum desired CC output
 cc_max = 97 # Maximum desired CC output (only want fader to go to unity gain - hence not 127)
 
 exp_pedal_calibration_percent = 80 # Required percentage of expression pedal movement for calibration 
