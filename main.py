@@ -11,16 +11,18 @@ exp = machine.ADC(Pin(26)) # Expression pedal device on pin 31
 uart = machine.UART(1, 31250) # UART Midi device on pin 6
 led = machine.Pin(25, Pin.OUT) # Pico onboard led
 
-# Expression pedal maximum and minimum
-# Set these to reverse thresholds
-exp_min = 65535 
-exp_max = 0
-
 # Midi settings
 midi_channel = 1 # Target midi channel to write to
 cc = 68 # Target Control Change number - this is for Behringer X32 Matrix 5
 cc_min = 0 # Minimum desired CC output
 cc_max = 97 # Maximum desired CC output (only want fader to go to unity gain - hence not 127)
+
+# Initialise variables
+# Set these to reverse thresholds to enable self calibration
+exp_min = 65535 
+exp_max = 0
+
+exp_previous = 0
 
 # This function translates the expression pedal value to the equivalent CC value
 def translate(exp_val):
@@ -29,9 +31,6 @@ def translate(exp_val):
     return ret
   else:
     return 0
-  # return int((((exp_val - exp_min) * (cc_max - cc_min)) / (exp_max - exp_min)) + cc_min)
-
-exp_previous = 0
 
 while True:
   exp_current = exp.read_u16()
