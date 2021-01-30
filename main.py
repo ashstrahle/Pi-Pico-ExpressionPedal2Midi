@@ -22,11 +22,15 @@ cc_max = 97 # Maximum desired CC output (only want fader to go to unity gain - h
 exp_min = 65535 
 exp_max = 0
 
-exp_previous = 0
+cc_previous = 0
 
 # This function translates the expression pedal value to the equivalent CC value
 def translate(exp_val):
-  ret = int((((exp_val - exp_min) * (cc_max - cc_min)) / (exp_max - exp_min)) + cc_min)
+  if exp_max - exp_min > 40000:
+    ret = int((((exp_val - exp_min) * (cc_max - cc_min)) / (exp_max - exp_min)) + cc_min)
+  else:
+    return 0
+
   if ret > 0:
     return ret
   else:
@@ -34,16 +38,17 @@ def translate(exp_val):
 
 while True:
   exp_current = exp.read_u16()
+  cc_current = translate(exp_current)
   if exp_current > exp_max:
     exp_max = exp_current
   elif exp_current < exp_min:
     exp_min = exp_current
 
-  if exp_current != exp_previous and exp_max - exp_min > 40000:
+  if cc_current != cc_previous:
     led.value(1) # Turn led on
-    cc_val = translate(exp_current)
-    uart.write(ustruct.pack("bbb",ControlChange + midi_channel - 1,cc,cc_val))
+    uart.write(ustruct.pack("bbb",ControlChange + midi_channel - 1,cc,cc_current))
     led.value(0) # Turn led off
-    exp_previous = exp_current
-    print("Writing Midi Channel: {}, ControlChange: {}, Value {}. Exp Pedal: cur: {}, min: {}, max: {}".format(midi_channel, cc, cc_val, exp_current, exp_min, exp_max))
-    time.sleep(0.05)
+    cc_previous = cc_current
+    print("Writing Midi Channel: {}, ControlChange: {}, Value {}. Exp Pedal: cur: {}, min: {}, max: {}".format(midi_channel, cc, cc_current, exp_current, exp_min, exp_max))
+  # else:
+  #   time.sleep(0.05)
