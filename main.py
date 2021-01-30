@@ -1,50 +1,70 @@
-import usb_midi
-import adafruit_midi
-from adafruit_midi.control_change import ControlChange
-import digitalio
-import analogio
-# import busio
-import board
+import sys
+from machine import ADC, Pin, UART
+import ustruct
 import time
 
-# Devices
-exp = analogio.AnalogIn(board.A0) # Expression pedal
-led = digitalio.DigitalInOut(board.LED)
+# Constants
+ControlChange = 0xb0
 
-# led = Pin(25, Pin.OUT)
+# Devices
+exp = machine.ADC(Pin(26)) # Expression pedal device on pin 31
+uart = machine.UART(1, 31250) # UART Midi device on pin 6
+led = machine.Pin(25, Pin.OUT) # Pico onboard led
 
 # Expression pedal settings
-exp_min = 0 # Expression pedal minimum value
-exp_max = 65535 #Expression pedal maximum value
+# exp_min = 352 # Expression pedal minimum value
+#exp_max = 65535 #Expression pedal maximum value
+# Set these to reverse thresholds
+exp_min = 65535 
+exp_max = 0
 
 # Midi settings
-midi_channel = 0 # Target midi channel to write to
+midi_channel = 1 # Target midi channel to write to
 cc = 68 # Target Control Change number - this is for Behringer X32 Matrix 5
 cc_min = 0 # Minimum desired CC output
-cc_max = 100 # Maximum desired CC output (only want fader to go to unity gain - hence not 127)
+cc_max = 97 # Maximum desired CC output (only want fader to go to unity gain - hence not 127)
 
 # This function translates the expression pedal value to the equivalent CC value
 def translate(exp_val):
-  return int((((exp_val - exp_min) * (cc_max - cc_min)) / (exp_max - exp_min)) + cc_min)
+  ret = int((((exp_val - exp_min) * (cc_max - cc_min)) / (exp_max - exp_min)) + cc_min)
+  if ret > 0:
+    return ret
+  else:
+    return 0
+  # return int((((exp_val - exp_min) * (cc_max - cc_min)) / (exp_max - exp_min)) + cc_min)
 
-midi = adafruit_midi.MIDI(midi_out=usb_midi.ports[1], out_channel=midi_channel)
+exp_previous = 0
 
-
-# uart = busio.UART(board.GP4, board.GP5, baudrate=31250)
-# midi = adafruit_midi.MIDI(midi_out=uart, out_channel=midi_channel)
-
-cc_val_last = 0
-
-led.switch_to_output(value=True)
 while True:
-  # cc_val = translate(exp.value)
-  # if cc_val != cc_val_last:
-  #   led.switch_to_output(value=False) # Flicker led
-  #   midi.send(ControlChange(cc, cc_val)) # Write midi
-  #   led.switch_to_output(value=True)
-  #   cc_val_last = cc_val
-  for i in range(100):
-    led.switch_to_output(value=True)
-    midi.send(ControlChange(cc, i))
-    led.switch_to_output(value=False)
-    time.sleep(0.05)
+  exp_current = exp.read_u16()
+  if exp_current > exp_max:
+    exp_max = exp_current
+  elif exp_current < exp_min:
+    exp_min = exp_current
+
+  if exp_current != exp_previous:
+    led.value(1) # Turn led on
+    cc_val = translate(exp_current)
+    uart.write(ustruct.pack("bbb",ControlChange + midi_channel - 1,cc,cc_val))
+    led.value(0) # Turn led off
+    exp_previous = exp_current
+    print("Writing Midi Channel: {}, ControlChange: {}, Value {}. Exp Pedal: cur: {}, min: {}, max: {}".format(midi_channel, cc, cc_val, exp_current, exp_min, exp_max))
+
+# max =  0
+# min = 66000
+# while True:
+#   exp_current = exp.read_u16()
+#   if exp_current > max:
+#       max = exp_current
+#   if exp_current < min:
+#       min = exp_current
+#   print ("Current value: {}, min: {}, max: {}".format(exp_current, min, max))
+#   time.sleep(0.1)
+
+# while True:
+#   for i in range(97):
+#     led.value(1)
+#     uart.write(ustruct.pack("bbb",ControlChange + midi_channel - 1,cc,i))
+#     print("Writing CC value " + str(i))
+#     led.value(0)
+#     time.sleep(0.1)
