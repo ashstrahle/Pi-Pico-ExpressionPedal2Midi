@@ -11,9 +11,7 @@ exp = machine.ADC(Pin(26)) # Expression pedal device on pin 31
 uart = machine.UART(1, 31250) # UART Midi device on pin 6
 led = machine.Pin(25, Pin.OUT) # Pico onboard led
 
-# Expression pedal settings
-# exp_min = 352 # Expression pedal minimum value
-#exp_max = 65535 #Expression pedal maximum value
+# Expression pedal maximum and minimum
 # Set these to reverse thresholds
 exp_min = 65535 
 exp_max = 0
@@ -42,29 +40,11 @@ while True:
   elif exp_current < exp_min:
     exp_min = exp_current
 
-  if exp_current != exp_previous:
+  if exp_current != exp_previous and exp_max - exp_min > 40000:
     led.value(1) # Turn led on
     cc_val = translate(exp_current)
     uart.write(ustruct.pack("bbb",ControlChange + midi_channel - 1,cc,cc_val))
     led.value(0) # Turn led off
     exp_previous = exp_current
     print("Writing Midi Channel: {}, ControlChange: {}, Value {}. Exp Pedal: cur: {}, min: {}, max: {}".format(midi_channel, cc, cc_val, exp_current, exp_min, exp_max))
-
-# max =  0
-# min = 66000
-# while True:
-#   exp_current = exp.read_u16()
-#   if exp_current > max:
-#       max = exp_current
-#   if exp_current < min:
-#       min = exp_current
-#   print ("Current value: {}, min: {}, max: {}".format(exp_current, min, max))
-#   time.sleep(0.1)
-
-# while True:
-#   for i in range(97):
-#     led.value(1)
-#     uart.write(ustruct.pack("bbb",ControlChange + midi_channel - 1,cc,i))
-#     print("Writing CC value " + str(i))
-#     led.value(0)
-#     time.sleep(0.1)
+    time.sleep(0.05)
