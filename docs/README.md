@@ -25,6 +25,8 @@ Optional: breadboard, 40 pin male headers, pin cables, scotch
 Power source:
 Either USB or 3xAA battery holder
 
+## Method
+
 1. Load your Pico board with main.py
 2. Customise the midi settings in the main.py file accordingly. Season to taste
 3. Upload to your board using Thonny, or your favorite IDE.
