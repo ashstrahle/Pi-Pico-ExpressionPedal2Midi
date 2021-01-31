@@ -12,7 +12,7 @@ The expression pedal is automatically calibrated. At startup, simply move your p
 
 ## Recipe
 
-Ingredients:
+### Ingredients
 
 - Raspberry Pi Pico (loaded with MicroPython)
 - ¼” jack TRS socket
@@ -25,7 +25,7 @@ Optional: breadboard, 40 pin male headers, pin cables, scotch
 Power source:
 Either USB or 3xAA battery holder
 
-## Method
+### Method
 
 1. Load your Pico board with main.py
 2. Customise the midi settings in the main.py file accordingly. Season to taste
@@ -33,7 +33,7 @@ Either USB or 3xAA battery holder
 
 Now for the stuffing:
 
-### Midi port
+#### Midi port
 
 ![](/docs/Pi-Pico-ExpressionPedal2Midi4.jpeg)
 
@@ -45,7 +45,7 @@ Midi messages are sent via UART1. Here’s where we need the resistors to protec
 
 You’re done here, next…
 
-### Expression pedal jack
+#### Expression pedal jack
 
 ![](/docs/Pi-Pico-ExpressionPedal2Midi3.jpeg)
 
