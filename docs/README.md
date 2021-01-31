@@ -9,3 +9,9 @@ The expression pedal is automatically calibrated. At startup, simply move your p
 Ashley Strahle
 
 https://github.com/ashstrahle
+
+![](/docs/Pi-Pico-ExpressionPedal2Midi.gif)
+![](/docs/Pi-Pico-ExpressionPedal2Midi1.jpeg)
+![](/docs/Pi-Pico-ExpressionPedal2Midi2.jpeg)
+![](/docs/Pi-Pico-ExpressionPedal2Midi3.jpeg)
+![](/docs/Pi-Pico-ExpressionPedal2Midi4.jpeg)
