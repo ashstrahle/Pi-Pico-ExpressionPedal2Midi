@@ -2,7 +2,7 @@
 
 ![](/docs/Pi-Pico-ExpressionPedal2Midi.gif)
 
-![](/docs/Pi-Pico-ExpressionPedal2Midi1.jpeg)
+![](/docs/Pi-Pico-ExpressionPedal2Midi2.jpeg)
 
 This is a Raspberry Pi Pico MicroPython project that takes an expression pedal input via a TRS 1/4" jack connected to ADC pins on the Pico, and outputs respective Midi CC messages via UART.
 
@@ -11,8 +11,6 @@ Midi channel, CC number, and maximum and minimum values are customisable.
 The expression pedal is automatically calibrated. At startup, simply move your pedal from minimum to maximum. The values are determined accordingly, and CC messages will start being sent.
 
 ## Recipe
-
-![](/docs/Pi-Pico-ExpressionPedal2Midi2.jpeg)
 
 Ingredients:
 
@@ -56,6 +54,8 @@ The expression pedal is connected to ADC0 on the Pico.
 9. Connect the jack tip to Pico pin 31 (3V3 OUT)
 
 Jubilations, you’re done.
+
+![](/docs/Pi-Pico-ExpressionPedal2Midi1.jpeg)
 
 Ashley Strahle
 
