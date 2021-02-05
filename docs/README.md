@@ -51,8 +51,8 @@ You’re done here, next…
 The expression pedal is connected to ADC0 on the Pico.
 
 6. Connect the jack sleeve to Pico ground pin (any or 3, 8, 13, 18, 23, 28, or 33)
-7. Connect the jack ring to Pico pin 36 (ADC0)
-8. Connect the jack tip to Pico pin 31 (3V3 OUT)
+7. Connect the jack ring to Pico pin 31 (ADC0)
+8. Connect the jack tip to Pico pin 36 (3V3 OUT)
 
 Jubilations, you’re done.
 
