@@ -58,6 +58,11 @@ Jubilations, you’re done.
 
 ![](/docs/Pi-Pico-ExpressionPedal2Midi1.jpeg)
 
+![](/docs/Pi-Pico-ExpressionPedal2Midi5.jpeg)
+
+![](/docs/Pi-Pico-ExpressionPedal2Midi6.jpeg)
+
+
 Ashley Strahle
 
 https://github.com/ashstrahle
