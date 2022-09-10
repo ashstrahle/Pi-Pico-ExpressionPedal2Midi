@@ -1,4 +1,4 @@
-# [Pi-Pico-ExpressionPedal2Midi](https://github.com/ashstrahle/Pi-Pico-ExpressionPedal2Midi)
+# [Pi-Pico-ExpressionPedal2Midi](https://github.com/ashstrahle/Pi-Pico-ExpressionPedal2Midi) now with added USB
 
 ![](/docs/Pi-Pico-ExpressionPedal2Midi.gif)
 
