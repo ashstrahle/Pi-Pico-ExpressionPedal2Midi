@@ -69,6 +69,7 @@ exp_max = offset
 exp_calibration_threshold = int(abs(exp_max - exp_min) * exp_pedal_calibration_percent / 100)
 cc_ratio = 1/(cc_max - cc_min)  # Calculate number of possible CC values
 exp_previous = exp.value
+
 if exp_previous == 0:
     exp_previous = offset
 
