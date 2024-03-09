@@ -78,7 +78,7 @@ while True:
             exp_current = 1e-6  # Small offset to avoid log(0) error
 
         # Only process if the change ratio is greater than the possible number of CC values
-        if abs(exp_current - exp_previous[i]) / exp_max[i] > 1/(cc_max[i] - cc_min[i]):
+        if abs(exp_current - exp_previous[i]) / exp_max[i] > 1/(expression_pedals[i]["cc_max"] - expression_pedals[i]["cc_min"]):
             if exp_current > exp_max[i]:
                 exp_max[i] = exp_current
             elif exp_current < exp_min[i]:
@@ -88,7 +88,7 @@ while True:
             # Only send midi when calibration threshold has been reached
             if exp_max[i] - exp_min[i] > exp_calibration_threshold[i]:
                 led.value = True  # Turn led on
-                cc_val = translate(exp_current, exp_min[i], exp_max[i], cc_min[i], cc_max[i])
+                cc_val = translate(exp_current, exp_min[i], exp_max[i], expression_pedals[i]["cc_min"], expression_pedals[i]["cc_max"])
                 uart_midi.send(ControlChange(expression_pedals[i]["cc"], cc_val))
                 usb_midi.send(ControlChange(expression_pedals[i]["cc"], cc_val))
                 led.value = False  # Turn led off
