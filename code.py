@@ -42,9 +42,9 @@ exp_pedal_calibration_percent = 80  # 0 - 100
 # Define expression pedals
 expression_pedals = [
     # Set expression pedal midi control change number, and min/max values
-    {"pin": board.GP26, "cc": 1, cc_min: 0, cc_max: 127}, # Pedal 1. Pin 31
-    {"pin": board.GP27, "cc": 2, cc_min: 0, cc_max: 127}, # Pedal 2. Pin 32
-    {"pin": board.GP28, "cc": 3, cc_min: 0, cc_max: 127}  # Peadl 3. Pin 34
+    {"pin": board.GP26, "cc": 1, "cc_min": 0, "cc_max": 127}, # Pedal 1. Pin 31
+    {"pin": board.GP27, "cc": 2, "cc_min": 0, "cc_max": 127}, # Pedal 2. Pin 32
+    {"pin": board.GP28, "cc": 3, "cc_min": 0, "cc_max": 127}  # Peadl 3. Pin 34
 ]
 
 # Devices
